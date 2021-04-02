@@ -195,7 +195,7 @@ class Console(cmd.Cmd):
                 msg += "    HTTP Header payload is limited to 8000 bytes.\n"
                 msg += "    Current payload is " + str(sys.getsizeof(cmd)) + " Bytes."
 
-                print color(msg,"red", style="bold")
+                print(color(msg,"red", style="bold"))
                 return ""
             else:
 
@@ -215,7 +215,7 @@ class Console(cmd.Cmd):
                 result = r.text.strip()
 
                 msg = "[!] HTTP ERROR: " + str(r.status_code)
-                print color(msg,"red", style="bold")
+                print(color(msg,"red", style="bold"))
 
                 return result
 
@@ -241,12 +241,12 @@ class Console(cmd.Cmd):
 
         except requests.ConnectionError as e:
             msg = "[!] ERROR (CONNECTION): \n" + str(e.message)
-            print color(msg,"red", style="bold")
+            print(color(msg,"red", style="bold"))
             return ''
 
         except requests.Timeout as e:
             msg = "[!] ERROR (TIMEOUT): \n" + str(e.message[-1])
-            print color(msg,"red", style="bold")
+            print(color(msg,"red", style="bold"))
             return ''
 
     def thread_cleanup(self):
@@ -267,7 +267,7 @@ class Console(cmd.Cmd):
     def do_history(self, args):
         """Print a list of last 20 commands that have been entered"""
         for item in self._history[-21:-1]:
-            print color(item,"blue",style="bold")
+            print(color(item,"blue",style="bold"))
 
     def do_config(self, args=None):
         """Show current settings"""
@@ -285,23 +285,23 @@ class Console(cmd.Cmd):
         output += "HTTP Timeout:      {0}\n".format(self.timeout)
         output += "Current Directory: {0}\n".format(self.currentdir)
 
-        print color(banner,clr="yellow",background="blue",style="bold")
-        print color(output,"blue",style="bold")
-        print ""
+        print(color(banner,clr="yellow",background="blue",style="bold"))
+        print(color(output,"blue",style="bold"))
+        print("")
 
         # Print Warning if running in Clear Text mode
 
         if self.mode == "clear":
-            print color("[!] WARNING: Running Clear Text Mode","red",style="bold")
-            print color("[!] This mode should only be used for troubleshooting and debugging.","red",style="bold")
-            print ""
+            print(color("[!] WARNING: Running Clear Text Mode","red",style="bold"))
+            print(color("[!] This mode should only be used for troubleshooting and debugging.","red",style="bold"))
+            print("")
 
 
     def do_command(self, args):
         """Issues remote command through webshell to remote system. """
         cmd_type = "OS"
         result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
-        print color(result,clr="green",style="bold")
+        print(color(result,clr="green",style="bold"))
 
     def do_download(self, args):
         """Download file from remote system 
@@ -319,7 +319,7 @@ class Console(cmd.Cmd):
         defaultpath = os.path.join("downloads",self.target)
 
         if (not args):
-            print color("Missing arguments",clr="FAIL",style="bold")
+            print(color("Missing arguments",clr="FAIL",style="bold"))
             self.do_help("download")
             return ""         
 
@@ -336,7 +336,7 @@ class Console(cmd.Cmd):
 
         filepath = filepath.replace('\\','\\\\')
 
-        print color("Downloading " + filepath + " ...",clr="blue",style="bold")
+        print(color("Downloading " + filepath + " ...",clr="blue",style="bold"))
         t = threading.Thread(target=self.new_download, args=(filepath,defaultpath),name=filepath)
         self.download_threads.append(t)
         s = self.timeout
@@ -356,7 +356,7 @@ class Console(cmd.Cmd):
             result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
 
         except TimeoutException:
-            print color("\n\tDownload for " + filepath + " has timed out. =(", "red", style="bold")
+            print(color("\n\tDownload for " + filepath + " has timed out. =(", "red", style="bold"))
             return
                 
         defaultpath = defaultpath.replace(":","_")
@@ -381,7 +381,7 @@ class Console(cmd.Cmd):
         # Is file blank?
         if result == "":
             msg = "File has no data or does not exist.  Save cancled: {0}".format(filepath)
-            print color(msg,clr="WARNING",style="bold")
+            print(color(msg,clr="WARNING",style="bold"))
             return
 
         # Save downloaded file
@@ -389,10 +389,10 @@ class Console(cmd.Cmd):
             f = open(os.path.join(localpath, localfile),'wb')
             f.write(result)
             f.close()
-            print color("Download complete:" + localfile,clr="blue",style="bold")
+            print(color("Download complete:" + localfile,clr="blue",style="bold"))
         else:
             msg = "Already downloaded? File '{0}' already exists".format(os.path.join(localpath, localfile))
-            print color(msg,clr="WARNING",style="bold")
+            print(color(msg,clr="WARNING",style="bold"))
 
     def do_upload(self, args):
         """
@@ -401,14 +401,14 @@ class Console(cmd.Cmd):
         \tupload myfile.txt c:\\windows\\temp\\myfile.txt
         """ 
         if (not args):
-            print color("Missing arguments",clr="FAIL",style="bold")
+            print(color("Missing arguments",clr="FAIL",style="bold"))
             self.do_help("upload")
         elif(not os.path.exists(args.split()[0])):
-            print color("\n\tLocal file does not exist..","red")
+            print(color("\n\tLocal file does not exist..","red"))
         else:
             self.thread_cleanup()
             if os.path.getsize(args.split()[0]) > 2000000:
-                print color("\n\tWARNING File exceeds 2mb limit. This may fail depending on server config.","red",style="bold")
+                print(color("\n\tWARNING File exceeds 2mb limit. This may fail depending on server config.","red",style="bold"))
                 time.sleep(5)    
             s = self.timeout
             self.timeout = 180
@@ -432,7 +432,7 @@ class Console(cmd.Cmd):
             dst = ".\\"+os.path.split(src)[1]
 
         if os.path.isdir(src):
-            print color("\n\tSorry, I cannot upload a directory..","red")
+            print(color("\n\tSorry, I cannot upload a directory..","red"))
         
         elif os.path.isfile(src):            
             
@@ -441,23 +441,23 @@ class Console(cmd.Cmd):
 
             cmd_type = 'UPLOAD'
             try:
-                print color("\n\tUploading " + src + " to " + dst + " ...\n","blue",style="bold")
+                print(color("\n\tUploading " + src + " to " + dst + " ...\n","blue",style="bold"))
                 #result = self.sendCommand(self.url, commandType, dst, toUpload = f)
                 result = self.sendCommand(self.url, self.password, self.language, cmd_type, command, self.timeout)
 
             except requests.Timeout:
-                print color("Upload thread for " + src + " has timed out. =(", "red", style="bold")
+                print(color("Upload thread for " + src + " has timed out. =(", "red", style="bold"))
 
-            print color(result,"blue",style="bold")
+            print(color(result,"blue",style="bold"))
 
         else:
-            print color("\n\tLocal file: "+src+" does not exist..","red")
+            print(color("\n\tLocal file: "+src+" does not exist..","red"))
 
     def do_code(self, args):
         """Execute arbitrary code"""
         cmd_type = "CODE"
         result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
-        print color(result,clr="green",style="bold")
+        print(color(result,clr="green",style="bold"))
 
     def do_pwd(self, args=None):
         """Execute sendCommand 'echo %cd%' to obtain current working directory"""
@@ -471,7 +471,7 @@ class Console(cmd.Cmd):
         cmd_type = "OS"
         args = 'tasklist'
         result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
-        print color(result,clr="green",style="bold")
+        print(color(result,clr="green",style="bold"))
 
     def do_cd(self, args):
         """Change directory"""
@@ -500,7 +500,7 @@ class Console(cmd.Cmd):
         except:
             result =  color("Timeout must be integer\nCurrent Timeout: %s" % self.timeout,clr="WARNING",style="bold")
 
-        print result
+        print(result)
 
     def removeNewline(self, str):
         """Remove newline character from string"""
@@ -520,7 +520,7 @@ class Console(cmd.Cmd):
                     continue
                 else:
                     newdir = newdir + "\\" + each
-            print newdir
+            print(newdir)
             return newdir.lower()
 
     def do_ls(self, args):
@@ -533,7 +533,7 @@ class Console(cmd.Cmd):
         cmd_type = "OS"
 
         result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
-        print color(result,clr="green",style="bold")
+        print(color(result,clr="green",style="bold"))
 
     def do_dir(self,args):
         """Calls ls, to prevent dir'ing your actual cwd instead of the virtual set by cd"""
@@ -563,8 +563,8 @@ class Console(cmd.Cmd):
         """
         cmd.Cmd.postloop(self)   ## Clean up command completion
 
-        print color(reset=True)
-        print "Exiting..."
+        print(color(reset=True))
+        print("Exiting...")
         return os.kill(os.getpid(),signal.SIGKILL) #forceful exit
         sys.exit()
 
@@ -597,7 +597,7 @@ class Console(cmd.Cmd):
         args = line
         result = self.sendCommand(self.url, self.password, self.language, cmd_type, args, self.timeout)
 
-        print color(result,clr="green",style="bold")
+        print(color(result,clr="green",style="bold"))
 
 
 
@@ -628,15 +628,15 @@ TinyShell - Webshell Console - Joe Vest - 2015
         timeout    = arguments['-t'] or 10
 
         if mode not in modes:
-            print color("Invalid mode, Valid Choices:",clr="red")
+            print(color("Invalid mode, Valid Choices:",clr="red"))
             for i in modes:
-                print color("\t" + i,clr="green",style="bold")
+                print(color("\t" + i,clr="green",style="bold"))
             exit()
 
         os.system("clear")
         target = color(url,clr="black",background="yellow",style="bold")
-        print intro
-        print color("Connecting to " + url,"yellow",style="bold")
+        print(intro)
+        print(color("Connecting to " + url,"yellow",style="bold"))
 
         console = Console(url, language, uas, password, mode, timeout)
         signal.signal(signal.SIGTSTP,sig_break_handler)
@@ -645,7 +645,7 @@ TinyShell - Webshell Console - Joe Vest - 2015
         
     # Handle invalid options
     except docopt.DocoptExit as e:
-        print e.message
+        print(e.message)
 
 
 
