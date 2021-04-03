@@ -389,7 +389,7 @@ class Console(cmd.Cmd):
         # Save downloaded file
         if not os.path.exists(os.path.join(localpath, localfile)):
             f = open(os.path.join(localpath, localfile),'wb')
-            f.write(result)
+            f.write(result.encode())
             f.close()
             print(color("Download complete:" + localfile,clr="blue",style="bold"))
         else:
