@@ -38,7 +38,6 @@ import shlex
 import signal
 import threading
 import time
-from UserString import MutableString
 from socket import timeout as TimeoutException
 from code_commands import *
 
@@ -85,7 +84,8 @@ def color(text="", clr=None, background=None, style=None,reset=True):
         ENDC = ''
 
     sys.setrecursionlimit(999999999)
-    text = MutableString(text) 
+    #text = MutableString(text)
+
 
     #COLORS
     if clr:
@@ -645,7 +645,7 @@ TinyShell - Webshell Console - Joe Vest - 2015
         
     # Handle invalid options
     except docopt.DocoptExit as e:
-        print(e.message)
+        print(e)
 
 
 
