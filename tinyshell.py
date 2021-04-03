@@ -178,6 +178,7 @@ class Console(cmd.Cmd):
         mode = self.mode
         rsp_header = self.rsp_header
         rsp_footer = self.rsp_footer
+        command = command.encode()
 
         cmd = remote_command(language, cmd_type, mode, rsp_header, rsp_footer, command)
 
