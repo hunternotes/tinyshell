@@ -40,6 +40,7 @@ import threading
 import time
 from socket import timeout as TimeoutException
 from code_commands import *
+from pprint import pprint
 
 
 
@@ -205,6 +206,7 @@ class Console(cmd.Cmd):
                 self.s.headers.update(self.headers)
 
         try:
+            pprint(data)
             r = self.s.post(url,data=data,verify=False, timeout=int(timeout))
 
             if r.status_code == 200:
