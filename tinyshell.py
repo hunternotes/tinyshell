@@ -206,7 +206,6 @@ class Console(cmd.Cmd):
                 self.s.headers.update(self.headers)
 
         try:
-            pprint(data)
             r = self.s.post(url,data=data,verify=False, timeout=int(timeout))
 
             if r.status_code == 200:
